@@ -10,36 +10,42 @@ import (
 
 // プロフィールを作成するリクエストです
 type CreateProfileReq struct {
-	supabaseID   string
-	displayName  string
-	introduction string
-	x            string
+	SupabaseID   string
+	AvatarURL    string
+	DisplayName  string
+	Introduction string
+	X            string
 }
 
 // プロフィールを作成します
 func CreateProfile(tx *gorm.DB, req CreateProfileReq) (Res, error) {
-	id, err := domain.RestoreUUID(req.supabaseID)
+	id, err := domain.RestoreUUID(req.SupabaseID)
 	if err != nil {
 		return Res{}, errors.NewError("IDを復元できません", err)
 	}
 
 	// slugは一番最初はIDを入れる
-	slug, err := domain.NewSlug(req.supabaseID)
+	slug, err := domain.NewSlug(req.SupabaseID)
 	if err != nil {
 		return Res{}, errors.NewError("slugを作成できません", err)
 	}
 
-	name, err := domain.NewDisplayName(req.displayName)
+	avatar, err := domain.NewAvatar(req.AvatarURL)
+	if err != nil {
+		return Res{}, errors.NewError("アバターを作成できません", err)
+	}
+
+	name, err := domain.NewDisplayName(req.DisplayName)
 	if err != nil {
 		return Res{}, errors.NewError("表示名を作成できません", err)
 	}
 
-	intro, err := domain.NewIntroduction(req.introduction)
+	intro, err := domain.NewIntroduction(req.Introduction)
 	if err != nil {
 		return Res{}, errors.NewError("自己紹介を作成できません", err)
 	}
 
-	xAccount, err := link.NewX(req.x)
+	xAccount, err := link.NewX(req.X)
 	if err != nil {
 		return Res{}, errors.NewError("Xを作成できません", err)
 	}
@@ -49,7 +55,9 @@ func CreateProfile(tx *gorm.DB, req CreateProfileReq) (Res, error) {
 		return Res{}, errors.NewError("リンクを作成できません", err)
 	}
 
-	profile, err := domain.NewProfile(id, slug, name, intro, l, domain.Markdown{})
+	profile, err := domain.NewProfile(
+		id, slug, avatar, name, intro, l, domain.Markdown{},
+	)
 	if err != nil {
 		return Res{}, errors.NewError("プロフィールを作成できません", err)
 	}

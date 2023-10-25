@@ -11,6 +11,7 @@ import (
 type Profile struct {
 	id           UUID
 	slug         Slug
+	avatar       Avatar
 	displayName  DisplayName
 	introduction Introduction
 	link         link.Link
@@ -21,6 +22,7 @@ type Profile struct {
 func NewProfile(
 	id UUID,
 	slug Slug,
+	avatar Avatar,
 	displayName DisplayName,
 	introduction Introduction,
 	link link.Link,
@@ -29,6 +31,7 @@ func NewProfile(
 	res := Profile{
 		id:           id,
 		slug:         slug,
+		avatar:       avatar,
 		displayName:  displayName,
 		introduction: introduction,
 		link:         link,
@@ -45,11 +48,13 @@ func NewProfile(
 // プロフィール情報を更新します
 func (p *Profile) UpdateProfile(
 	slug Slug,
+	avatar Avatar,
 	displayName DisplayName,
 	introduction Introduction,
 	link link.Link,
 ) error {
 	p.slug = slug
+	p.avatar = avatar
 	p.displayName = displayName
 	p.introduction = introduction
 	p.link = link
@@ -82,6 +87,11 @@ func (p Profile) Slug() Slug {
 	return p.slug
 }
 
+// avatarを取得します
+func (p Profile) Avatar() Avatar {
+	return p.avatar
+}
+
 // 表示名を取得します
 func (p Profile) DisplayName() DisplayName {
 	return p.displayName
@@ -112,6 +122,7 @@ func (p Profile) MarshalJSON() ([]byte, error) {
 	data := struct {
 		ID           UUID         `json:"id"`
 		Slug         Slug         `json:"slug"`
+		Avatar       Avatar       `json:"avatar"`
 		DisplayName  DisplayName  `json:"display_name"`
 		Introduction Introduction `json:"introduction"`
 		Link         link.Link    `json:"link"`
@@ -119,6 +130,7 @@ func (p Profile) MarshalJSON() ([]byte, error) {
 	}{
 		ID:           p.id,
 		Slug:         p.slug,
+		Avatar:       p.avatar,
 		DisplayName:  p.displayName,
 		Introduction: p.introduction,
 		Link:         p.link,
@@ -138,6 +150,7 @@ func (p *Profile) UnmarshalJSON(b []byte) error {
 	var data struct {
 		ID           UUID         `json:"id"`
 		Slug         Slug         `json:"slug"`
+		Avatar       Avatar       `json:"avatar"`
 		DisplayName  DisplayName  `json:"display_name"`
 		Introduction Introduction `json:"introduction"`
 		Link         link.Link    `json:"link"`
@@ -150,6 +163,7 @@ func (p *Profile) UnmarshalJSON(b []byte) error {
 
 	p.id = data.ID
 	p.slug = data.Slug
+	p.avatar = data.Avatar
 	p.displayName = data.DisplayName
 	p.introduction = data.Introduction
 	p.link = data.Link
