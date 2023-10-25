@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 
 	"github.com/totsumaru/md-profile-backend/shared/errors"
-	"github.com/totsumaru/md-profile-backend/src/domain/link"
+	"github.com/totsumaru/md-profile-backend/src/profile/domain/link"
 )
 
 // プロフィールです

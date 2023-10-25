@@ -1,6 +1,8 @@
 package app
 
-import "github.com/totsumaru/md-profile-backend/src/domain"
+import (
+	"github.com/totsumaru/md-profile-backend/src/profile/domain"
+)
 
 // レスポンスです
 type Res struct {

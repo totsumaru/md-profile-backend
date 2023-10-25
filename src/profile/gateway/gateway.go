@@ -5,7 +5,7 @@ import (
 
 	"github.com/totsumaru/md-profile-backend/shared/database"
 	"github.com/totsumaru/md-profile-backend/shared/errors"
-	"github.com/totsumaru/md-profile-backend/src/domain"
+	domain2 "github.com/totsumaru/md-profile-backend/src/profile/domain"
 	"gorm.io/gorm"
 )
 
@@ -29,7 +29,7 @@ func NewGateway(tx *gorm.DB) (Gateway, error) {
 // プロフィールを新規作成します
 //
 // 同じIDのレコードが存在する場合はエラーを返します。
-func (g Gateway) Create(u domain.Profile) error {
+func (g Gateway) Create(u domain2.Profile) error {
 	dbProfile, err := castToDBProfile(u)
 	if err != nil {
 		return errors.NewError("ドメインモデルをDBの構造体に変換できません", err)
@@ -49,7 +49,7 @@ func (g Gateway) Create(u domain.Profile) error {
 }
 
 // 更新します
-func (g Gateway) Update(u domain.Profile) error {
+func (g Gateway) Update(u domain2.Profile) error {
 	dbProfile, err := castToDBProfile(u)
 	if err != nil {
 		return errors.NewError("ドメインモデルをDBの構造体に変換できません", err)
@@ -75,8 +75,8 @@ func (g Gateway) Update(u domain.Profile) error {
 // IDでプロフィールを取得します
 //
 // レコードが存在しない場合はエラーを返します。
-func (g Gateway) FindByID(id domain.UUID) (domain.Profile, error) {
-	res := domain.Profile{}
+func (g Gateway) FindByID(id domain2.UUID) (domain2.Profile, error) {
+	res := domain2.Profile{}
 
 	var dbProfile database.Profile
 	if err := g.tx.First(&dbProfile, "id = ?", id.String()).Error; err != nil {
@@ -95,8 +95,8 @@ func (g Gateway) FindByID(id domain.UUID) (domain.Profile, error) {
 // slugでプロフィールを取得します
 //
 // レコードが存在しない場合はエラーを返します。
-func (g Gateway) FindBySlug(slug domain.Slug) (domain.Profile, error) {
-	res := domain.Profile{}
+func (g Gateway) FindBySlug(slug domain2.Slug) (domain2.Profile, error) {
+	res := domain2.Profile{}
 
 	var dbProfile database.Profile
 	if err := g.tx.First(&dbProfile, "slug = ?", slug.String()).Error; err != nil {
@@ -115,8 +115,8 @@ func (g Gateway) FindBySlug(slug domain.Slug) (domain.Profile, error) {
 // FOR UPDATEでプロフィールを取得します
 //
 // レコードが存在しない場合はエラーを返します。
-func (g Gateway) FindByIDForUpdate(id domain.UUID) (domain.Profile, error) {
-	res := domain.Profile{}
+func (g Gateway) FindByIDForUpdate(id domain2.UUID) (domain2.Profile, error) {
+	res := domain2.Profile{}
 
 	var dbProfile database.Profile
 	if err := g.tx.Set("gorm:query_option", "FOR UPDATE").First(
@@ -139,7 +139,7 @@ func (g Gateway) FindByIDForUpdate(id domain.UUID) (domain.Profile, error) {
 // =============
 
 // ドメインモデルをDBの構造体に変換します
-func castToDBProfile(domainProfile domain.Profile) (database.Profile, error) {
+func castToDBProfile(domainProfile domain2.Profile) (database.Profile, error) {
 	res := database.Profile{}
 
 	b, err := json.Marshal(&domainProfile)
@@ -155,8 +155,8 @@ func castToDBProfile(domainProfile domain.Profile) (database.Profile, error) {
 }
 
 // DBの構造体からドメインモデルに変換します
-func castToDomainModel(dbProfile database.Profile) (domain.Profile, error) {
-	res := domain.Profile{}
+func castToDomainModel(dbProfile database.Profile) (domain2.Profile, error) {
+	res := domain2.Profile{}
 	if err := json.Unmarshal(dbProfile.Data, &res); err != nil {
 		return res, errors.NewError("Unmarshalに失敗しました", err)
 	}
