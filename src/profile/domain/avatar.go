@@ -2,6 +2,7 @@ package domain
 
 import (
 	"encoding/json"
+	"strings"
 
 	"github.com/totsumaru/md-profile-backend/src/shared/errors"
 )
@@ -18,6 +19,9 @@ type Avatar struct {
 
 // アバターを作成します
 func NewAvatar(value string) (Avatar, error) {
+	// Xの元のサイズだと48x48で小さいので、URLをリプレイスします
+	value = strings.Replace(value, "normal", "400x400", -1)
+
 	res := Avatar{
 		value: value,
 	}

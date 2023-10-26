@@ -8,7 +8,7 @@ import (
 
 const (
 	// slugの最大文字数
-	SlugMaxLen = 30
+	SlugMaxLen = 40
 )
 
 // slugです

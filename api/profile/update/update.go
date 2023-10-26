@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/totsumaru/md-profile-backend/api/internal"
 	"github.com/totsumaru/md-profile-backend/src/cloudflare"
 	"github.com/totsumaru/md-profile-backend/src/profile/app"
 	"github.com/totsumaru/md-profile-backend/src/shared/errors"
@@ -12,6 +13,11 @@ import (
 	"github.com/totsumaru/md-profile-backend/src/shared/verify"
 	"gorm.io/gorm"
 )
+
+// レスポンスです
+type Res struct {
+	internal.ProfileAPIRes
+}
 
 // プロフィールを更新します
 func UpdateProfile(e *gin.Engine, db *gorm.DB) {
@@ -22,6 +28,8 @@ func UpdateProfile(e *gin.Engine, db *gorm.DB) {
 			api_err.Send(c, 401, errors.NewError("認証できません"))
 			return
 		}
+
+		res := Res{}
 
 		// Tx
 		err := db.Transaction(func(tx *gorm.DB) error {
@@ -48,10 +56,12 @@ func UpdateProfile(e *gin.Engine, db *gorm.DB) {
 				Github:       c.PostForm("github"),
 				Website:      c.PostForm("website"),
 			}
-			_, err = app.UpdateProfile(tx, req)
+			backendRes, err := app.UpdateProfile(tx, req)
 			if err != nil {
 				return errors.NewError("プロフィールを更新できません", err)
 			}
+
+			res.ProfileAPIRes = internal.CastToProfileAPIRes(backendRes)
 
 			return nil
 		})
@@ -60,6 +70,6 @@ func UpdateProfile(e *gin.Engine, db *gorm.DB) {
 			return
 		}
 
-		c.JSON(200, nil)
+		c.JSON(200, res)
 	})
 }

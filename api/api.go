@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/totsumaru/md-profile-backend/api/profile"
 	"github.com/totsumaru/md-profile-backend/api/profile/create"
+	"github.com/totsumaru/md-profile-backend/api/profile/slug"
 	"github.com/totsumaru/md-profile-backend/api/profile/update"
 	"gorm.io/gorm"
 )
@@ -17,7 +18,9 @@ func RegisterRouter(e *gin.Engine, db *gorm.DB) {
 	// プロフィールの更新
 	update.UpdateProfile(e, db)
 	// slugでプロフィールを取得します
-	profile.FindProfileBySlug(e, db)
+	slug.FindProfileBySlug(e, db)
+	// AccessTokenからプロフィールを取得します
+	profile.FindProfileByAccessToken(e, db)
 }
 
 // ルートです

@@ -1,4 +1,4 @@
-package profile
+package slug
 
 import (
 	"github.com/gin-gonic/gin"
@@ -6,7 +6,6 @@ import (
 	"github.com/totsumaru/md-profile-backend/src/profile/app"
 	"github.com/totsumaru/md-profile-backend/src/shared/errors"
 	"github.com/totsumaru/md-profile-backend/src/shared/errors/api_err"
-	"github.com/totsumaru/md-profile-backend/src/shared/verify"
 	"gorm.io/gorm"
 )
 
@@ -15,23 +14,18 @@ type Res struct {
 	internal.ProfileAPIRes
 }
 
-// tokenからプロフィールを取得します
-func FindProfileByAccessToken(e *gin.Engine, db *gorm.DB) {
-	e.GET("/api/profile", func(c *gin.Context) {
-		// 認証
-		isLogin, verifyRes := verify.VerifyToken(c)
-		if !isLogin {
-			api_err.Send(c, 401, errors.NewError("認証できません"))
-			return
-		}
+// slugでプロフィールを取得します
+func FindProfileBySlug(e *gin.Engine, db *gorm.DB) {
+	e.GET("/api/profile/slug/:slug", func(c *gin.Context) {
+		slug := c.Param("slug")
 
 		res := Res{}
 
 		// プロフィールを取得します
 		err := func() error {
-			backendProfile, err := app.FindByID(db, verifyRes.ID)
+			backendProfile, err := app.FindBySlug(db, slug)
 			if err != nil {
-				return errors.NewError("idでプロフィールを取得できません", err)
+				return errors.NewError("slugでプロフィールを取得できません", err)
 			}
 
 			res.ProfileAPIRes = internal.CastToProfileAPIRes(backendProfile)
