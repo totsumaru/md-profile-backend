@@ -41,7 +41,7 @@ func (s Slug) IsEmpty() bool {
 
 // slugを検証します
 func (s Slug) validate() error {
-	if len(s.value) > SlugMaxLen {
+	if len([]rune(s.value)) > SlugMaxLen {
 		return errors.NewError("slugの最大文字数を超えています")
 	}
 

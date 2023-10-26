@@ -47,7 +47,7 @@ func (g Github) validate() error {
 		return nil
 	}
 
-	if len(g.value) > GithubMaxLen {
+	if len([]rune(g.value)) > GithubMaxLen {
 		return errors.NewError("githubのアカウントの最大文字数を超えています")
 	}
 

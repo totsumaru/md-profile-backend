@@ -47,7 +47,7 @@ func (a Avatar) IsEmpty() bool {
 //
 // 空を許容します。
 func (a Avatar) validate() error {
-	if len(a.value) > AvatarMaxLen {
+	if len([]rune(a.value)) > AvatarMaxLen {
 		return errors.NewError("アバターの最大文字数を超えています")
 	}
 

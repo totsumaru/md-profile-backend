@@ -41,7 +41,7 @@ func (d DisplayName) IsEmpty() bool {
 
 // 表示名を検証します
 func (d DisplayName) validate() error {
-	if len(d.value) > DisplayNameMaxLen {
+	if len([]rune(d.value)) > DisplayNameMaxLen {
 		return errors.NewError("表示名の最大文字数を超えています")
 	}
 

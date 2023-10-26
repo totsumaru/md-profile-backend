@@ -47,7 +47,7 @@ func (x X) validate() error {
 		return nil
 	}
 
-	if len(x.value) > XMaxLen {
+	if len([]rune(x.value)) > XMaxLen {
 		return errors.NewError("Xのアカウント名の最大文字数を超えています")
 	}
 

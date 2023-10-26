@@ -47,7 +47,7 @@ func (i Introduction) validate() error {
 		return nil
 	}
 
-	if len(i.value) > IntroductionMaxLen {
+	if len([]rune(i.value)) > IntroductionMaxLen {
 		return errors.NewError("自己紹介の最大文字数を超えています")
 	}
 

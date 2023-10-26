@@ -56,7 +56,7 @@ func (w Markdown) validate() error {
 		return nil
 	}
 
-	if len(w.value) > MarkdownMaxLen {
+	if len([]rune(w.value)) > MarkdownMaxLen {
 		return errors.NewError("マークダウンの最大文字数を超えています")
 	}
 

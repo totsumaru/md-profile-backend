@@ -48,7 +48,7 @@ func (w Website) validate() error {
 		return nil
 	}
 
-	if len(w.value) > WebsiteMaxLen {
+	if len([]rune(w.value)) > WebsiteMaxLen {
 		return errors.NewError("webサイトの最大文字数を超えています")
 	}
 

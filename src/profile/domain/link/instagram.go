@@ -47,7 +47,7 @@ func (i Instagram) validate() error {
 		return nil
 	}
 
-	if len(i.value) > InstagramMaxLen {
+	if len([]rune(i.value)) > InstagramMaxLen {
 		return errors.NewError("インスタグラムのアカウントの最大文字数を超えています")
 	}
 
