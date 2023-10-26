@@ -1,9 +1,9 @@
 package app
 
 import (
-	"github.com/totsumaru/md-profile-backend/shared/errors"
-	domain2 "github.com/totsumaru/md-profile-backend/src/profile/domain"
+	"github.com/totsumaru/md-profile-backend/src/profile/domain"
 	"github.com/totsumaru/md-profile-backend/src/profile/gateway"
+	"github.com/totsumaru/md-profile-backend/src/shared/errors"
 	"gorm.io/gorm"
 )
 
@@ -15,7 +15,7 @@ type UpdateMarkdownReq struct {
 
 // マークダウンを更新します
 func UpdateMarkdown(tx *gorm.DB, req UpdateMarkdownReq) (Res, error) {
-	id, err := domain2.RestoreUUID(req.ID)
+	id, err := domain.RestoreUUID(req.ID)
 	if err != nil {
 		return Res{}, errors.NewError("IDを作成できません", err)
 	}
@@ -31,7 +31,7 @@ func UpdateMarkdown(tx *gorm.DB, req UpdateMarkdownReq) (Res, error) {
 		return Res{}, errors.NewError("プロフィールのレコードを作成できません", err)
 	}
 
-	md, err := domain2.NewMarkdown(req.Markdown)
+	md, err := domain.NewMarkdown(req.Markdown)
 	if err != nil {
 		return Res{}, errors.NewError("マークダウンを作成できません", err)
 	}

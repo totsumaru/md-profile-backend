@@ -8,6 +8,7 @@ import (
 type Res struct {
 	ID           string
 	Slug         string
+	Avatar       string
 	DisplayName  string
 	Introduction string
 	Link         struct {
@@ -24,6 +25,7 @@ func CreateRes(p domain.Profile) Res {
 	res := Res{}
 	res.ID = p.ID().String()
 	res.Slug = p.Slug().String()
+	res.Avatar = p.Avatar().String()
 	res.DisplayName = p.DisplayName().String()
 	res.Introduction = p.Introduction().String()
 	res.Link.X = p.Link().X().String()

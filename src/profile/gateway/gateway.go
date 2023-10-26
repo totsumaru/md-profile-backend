@@ -3,9 +3,9 @@ package gateway
 import (
 	"encoding/json"
 
-	"github.com/totsumaru/md-profile-backend/shared/database"
-	"github.com/totsumaru/md-profile-backend/shared/errors"
 	domain2 "github.com/totsumaru/md-profile-backend/src/profile/domain"
+	"github.com/totsumaru/md-profile-backend/src/shared/database"
+	"github.com/totsumaru/md-profile-backend/src/shared/errors"
 	"gorm.io/gorm"
 )
 

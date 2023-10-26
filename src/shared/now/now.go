@@ -3,7 +3,7 @@ package now
 import (
 	"time"
 
-	"github.com/totsumaru/md-profile-backend/shared/errors"
+	"github.com/totsumaru/md-profile-backend/src/shared/errors"
 )
 
 var location *time.Location

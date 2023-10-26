@@ -3,7 +3,7 @@ package link
 import (
 	"encoding/json"
 
-	"github.com/totsumaru/md-profile-backend/shared/errors"
+	"github.com/totsumaru/md-profile-backend/src/shared/errors"
 )
 
 // リンクです

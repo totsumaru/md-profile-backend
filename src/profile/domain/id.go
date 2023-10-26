@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 
 	"github.com/google/uuid"
-	"github.com/totsumaru/md-profile-backend/shared/errors"
+	"github.com/totsumaru/md-profile-backend/src/shared/errors"
 )
 
 // IDです

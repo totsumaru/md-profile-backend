@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"strings"
 
-	"github.com/totsumaru/md-profile-backend/shared/errors"
+	"github.com/totsumaru/md-profile-backend/src/shared/errors"
 )
 
 const (
