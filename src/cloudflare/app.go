@@ -19,10 +19,17 @@ import (
 // cloudflareに画像をアップロードします
 //
 // 公開URLを返します。
-func Upload(c *gin.Context, image multipart.File) (string, error) {
+func Upload(c *gin.Context, image *multipart.FileHeader) (string, error) {
 	var bucketName = "profio"
 	var accessKeyId = os.Getenv("CLOUDFLARE_S3_ACCESS_KEY")
 	var accessKeySecret = os.Getenv("CLOUDFLARE_S3_SECRET_ACCESS_KEY")
+
+	// 1. *multipart.FileHeaderからmultipart.Fileをオープンする
+	imageFile, err := image.Open()
+	if err != nil {
+		return "", errors.NewError("画像のオープンに失敗しました", err)
+	}
+	defer imageFile.Close()
 
 	// uuidを生成します
 	newUUID, err := uuid.NewRandom()
@@ -53,12 +60,12 @@ func Upload(c *gin.Context, image multipart.File) (string, error) {
 
 	// MIMEタイプの検出
 	buffer := make([]byte, 512) // ヘッダの最大長
-	_, err = image.Read(buffer)
+	_, err = imageFile.Read(buffer)
 	if err != nil {
 		return "", errors.NewError("画像の読み込みに失敗しました", err)
 	}
 	contentType := http.DetectContentType(buffer)
-	_, err = image.Seek(0, 0) // ファイルのポインタを先頭に戻す
+	_, err = imageFile.Seek(0, 0) // ファイルのポインタを先頭に戻す
 	if err != nil {
 		return "", errors.NewError("MIMEタイプの検出に失敗しました", err)
 	}
@@ -67,7 +74,7 @@ func Upload(c *gin.Context, image multipart.File) (string, error) {
 	param := s3.PutObjectInput{
 		Bucket:             aws.String(bucketName),
 		Key:                aws.String(newUUID.String()),
-		Body:               image,
+		Body:               imageFile,
 		ContentType:        aws.String(contentType),
 		ContentDisposition: aws.String("inline"),
 	}

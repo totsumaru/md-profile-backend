@@ -1,19 +1,13 @@
-package profile
+package create
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/totsumaru/md-profile-backend/api/res"
 	"github.com/totsumaru/md-profile-backend/src/profile/app"
 	"github.com/totsumaru/md-profile-backend/src/shared/errors"
 	"github.com/totsumaru/md-profile-backend/src/shared/errors/api_err"
 	"github.com/totsumaru/md-profile-backend/src/shared/verify"
 	"gorm.io/gorm"
 )
-
-// レスポンスです
-type Res struct {
-	Profile res.ProfileAPIRes `json:"profile"`
-}
 
 // プロフィールを作成します
 func CreateProfile(e *gin.Engine, db *gorm.DB) {
@@ -26,7 +20,6 @@ func CreateProfile(e *gin.Engine, db *gorm.DB) {
 		}
 
 		// Tx
-		apiRes := Res{}
 		err := db.Transaction(func(tx *gorm.DB) error {
 			req := app.CreateProfileReq{
 				SupabaseID:  verifyRes.ID,
@@ -34,12 +27,10 @@ func CreateProfile(e *gin.Engine, db *gorm.DB) {
 				DisplayName: verifyRes.DisplayName,
 				X:           verifyRes.X,
 			}
-			ctxRes, err := app.CreateProfile(tx, req)
+			_, err := app.CreateProfile(tx, req)
 			if err != nil {
 				return errors.NewError("プロフィールを作成できません", err)
 			}
-
-			apiRes.Profile = res.CastToProfileAPIRes(ctxRes)
 
 			return nil
 		})
@@ -48,6 +39,6 @@ func CreateProfile(e *gin.Engine, db *gorm.DB) {
 			return
 		}
 
-		c.JSON(200, apiRes)
+		c.JSON(200, nil)
 	})
 }

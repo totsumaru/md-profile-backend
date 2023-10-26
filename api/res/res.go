@@ -1,4 +1,4 @@
-package res
+package api_res
 
 import "github.com/totsumaru/md-profile-backend/src/profile/app"
 

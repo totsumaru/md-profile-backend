@@ -3,6 +3,8 @@ package api
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/totsumaru/md-profile-backend/api/profile"
+	"github.com/totsumaru/md-profile-backend/api/profile/create"
+	"github.com/totsumaru/md-profile-backend/api/profile/update"
 	"gorm.io/gorm"
 )
 
@@ -11,7 +13,11 @@ func RegisterRouter(e *gin.Engine, db *gorm.DB) {
 	Route(e)
 
 	// プロフィールの作成
-	profile.CreateProfile(e, db)
+	create.CreateProfile(e, db)
+	// プロフィールの更新
+	update.UpdateProfile(e, db)
+	// slugでプロフィールを取得します
+	profile.FindProfileBySlug(e, db)
 }
 
 // ルートです

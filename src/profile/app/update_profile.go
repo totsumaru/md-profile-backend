@@ -19,7 +19,6 @@ type UpdateProfileReq struct {
 	Instagram    string
 	Github       string
 	Website      string
-	Markdown     string
 }
 
 // プロフィール情報を更新します
