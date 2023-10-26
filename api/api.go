@@ -2,6 +2,7 @@ package api
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/totsumaru/md-profile-backend/api/image/upload"
 	"github.com/totsumaru/md-profile-backend/api/profile"
 	"github.com/totsumaru/md-profile-backend/api/profile/create"
 	"github.com/totsumaru/md-profile-backend/api/profile/slug"
@@ -14,16 +15,12 @@ import (
 func RegisterRouter(e *gin.Engine, db *gorm.DB) {
 	Route(e)
 
-	// プロフィールを作成します
 	create.CreateProfile(e, db)
-	// プロフィールを更新します
 	update.UpdateProfile(e, db)
-	// Markdownを更新します
 	markdown.UpdateMarkdown(e, db)
-	// slugでプロフィールを取得します
 	slug.FindProfileBySlug(e, db)
-	// AccessTokenからプロフィールを取得します
 	profile.FindProfileByAccessToken(e, db)
+	upload.UploadImage(e)
 }
 
 // ルートです
