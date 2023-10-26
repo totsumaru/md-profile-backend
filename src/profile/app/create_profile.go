@@ -55,9 +55,12 @@ func CreateProfile(tx *gorm.DB, req CreateProfileReq) (Res, error) {
 		return Res{}, errors.NewError("リンクを作成できません", err)
 	}
 
-	profile, err := domain.NewProfile(
-		id, slug, avatar, name, intro, l, domain.Markdown{},
-	)
+	md, err := domain.NewMarkdown(domain.InitialMarkdown)
+	if err != nil {
+		return Res{}, errors.NewError("マークダウンを作成できません", err)
+	}
+
+	profile, err := domain.NewProfile(id, slug, avatar, name, intro, l, md)
 	if err != nil {
 		return Res{}, errors.NewError("プロフィールを作成できません", err)
 	}

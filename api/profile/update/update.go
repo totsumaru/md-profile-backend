@@ -33,8 +33,6 @@ func UpdateProfile(e *gin.Engine, db *gorm.DB) {
 
 		// Tx
 		err := db.Transaction(func(tx *gorm.DB) error {
-			// TODO: 2. avatarURLは空の値を渡す -> contextでは、空の値の場合は更新しないようにする
-
 			// ファイルが添付されていない場合はエラーにならない
 			avatarFile, err := c.FormFile("avatar")
 			if err != nil && !defaultErrors.Is(err, http.ErrMissingFile) {

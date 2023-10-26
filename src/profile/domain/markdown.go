@@ -11,6 +11,15 @@ const (
 	MarkdownMaxLen = 3000
 )
 
+const InitialMarkdown = `
+## 自己紹介
+
+ここに自己紹介や実績を書きます。
+
+- リスト1
+  - リスト2
+`
+
 // マークダウンです
 type Markdown struct {
 	value string

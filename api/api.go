@@ -6,6 +6,7 @@ import (
 	"github.com/totsumaru/md-profile-backend/api/profile/create"
 	"github.com/totsumaru/md-profile-backend/api/profile/slug"
 	"github.com/totsumaru/md-profile-backend/api/profile/update"
+	"github.com/totsumaru/md-profile-backend/api/profile/update/markdown"
 	"gorm.io/gorm"
 )
 
@@ -13,10 +14,12 @@ import (
 func RegisterRouter(e *gin.Engine, db *gorm.DB) {
 	Route(e)
 
-	// プロフィールの作成
+	// プロフィールを作成します
 	create.CreateProfile(e, db)
-	// プロフィールの更新
+	// プロフィールを更新します
 	update.UpdateProfile(e, db)
+	// Markdownを更新します
+	markdown.UpdateMarkdown(e, db)
 	// slugでプロフィールを取得します
 	slug.FindProfileBySlug(e, db)
 	// AccessTokenからプロフィールを取得します
