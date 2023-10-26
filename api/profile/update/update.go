@@ -33,16 +33,21 @@ func UpdateProfile(e *gin.Engine, db *gorm.DB) {
 
 		// Tx
 		err := db.Transaction(func(tx *gorm.DB) error {
+			// TODO: 2. avatarURLは空の値を渡す -> contextでは、空の値の場合は更新しないようにする
+
 			// ファイルが添付されていない場合はエラーにならない
 			avatarFile, err := c.FormFile("avatar")
 			if err != nil && !defaultErrors.Is(err, http.ErrMissingFile) {
 				return errors.NewError("ファイルを取得できません")
 			}
 
-			// 画像をCloudflareにアップロードします
-			avatarURL, err := cloudflare.Upload(c, avatarFile)
-			if err != nil {
-				return errors.NewError("画像をアプロードできません", err)
+			var avatarURL string
+			if avatarFile != nil {
+				// 画像をCloudflareにアップロードします
+				avatarURL, err = cloudflare.Upload(c, avatarFile)
+				if err != nil {
+					return errors.NewError("画像をアプロードできません", err)
+				}
 			}
 
 			req := app.UpdateProfileReq{

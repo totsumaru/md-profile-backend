@@ -34,7 +34,7 @@ func UpdateProfile(tx *gorm.DB, req UpdateProfileReq) (Res, error) {
 	}
 
 	// FOR UPDATEで取得します
-	profile, err := gw.FindByIDForUpdate(id)
+	currentProfile, err := gw.FindByIDForUpdate(id)
 	if err != nil {
 		return Res{}, errors.NewError("プロフィールのレコードを作成できません", err)
 	}
@@ -44,7 +44,12 @@ func UpdateProfile(tx *gorm.DB, req UpdateProfileReq) (Res, error) {
 		return Res{}, errors.NewError("slugを作成できません", err)
 	}
 
-	avatar, err := domain.NewAvatar(req.AvatarURL)
+	// アバターURLが空の場合は、現在の値を再度入れる
+	avatarURL := req.AvatarURL
+	if req.AvatarURL == "" {
+		avatarURL = currentProfile.Avatar().String()
+	}
+	avatar, err := domain.NewAvatar(avatarURL)
 	if err != nil {
 		return Res{}, errors.NewError("アバターを作成できません", err)
 	}
@@ -84,13 +89,13 @@ func UpdateProfile(tx *gorm.DB, req UpdateProfileReq) (Res, error) {
 		return Res{}, errors.NewError("リンクを作成できません", err)
 	}
 
-	if err = profile.UpdateProfile(slug, avatar, displayName, introduction, l); err != nil {
+	if err = currentProfile.UpdateProfile(slug, avatar, displayName, introduction, l); err != nil {
 		return Res{}, errors.NewError("プロフィールを更新できません", err)
 	}
 
-	if err = gw.Update(profile); err != nil {
+	if err = gw.Update(currentProfile); err != nil {
 		return Res{}, errors.NewError("プロフィールを更新できません", err)
 	}
 
-	return CreateRes(profile), nil
+	return CreateRes(currentProfile), nil
 }
