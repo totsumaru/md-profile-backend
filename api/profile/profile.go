@@ -2,7 +2,7 @@ package profile
 
 import (
 	"github.com/gin-gonic/gin"
-	api_res "github.com/totsumaru/md-profile-backend/api/res"
+	"github.com/totsumaru/md-profile-backend/api/internal"
 	"github.com/totsumaru/md-profile-backend/src/profile/app"
 	"github.com/totsumaru/md-profile-backend/src/shared/errors"
 	"github.com/totsumaru/md-profile-backend/src/shared/errors/api_err"
@@ -11,7 +11,7 @@ import (
 
 // レスポンスです
 type Res struct {
-	Profile api_res.ProfileAPIRes `json:"profile"`
+	Profile internal.ProfileAPIRes `json:"profile"`
 }
 
 // slugでプロフィールを取得します
@@ -28,7 +28,7 @@ func FindProfileBySlug(e *gin.Engine, db *gorm.DB) {
 				return errors.NewError("slugでプロフィールを取得できません", err)
 			}
 
-			res.Profile = api_res.CastToProfileAPIRes(backendProfile)
+			res.Profile = internal.CastToProfileAPIRes(backendProfile)
 
 			return nil
 		}()
