@@ -1,7 +1,6 @@
 package verify
 
 import (
-	"fmt"
 	"os"
 	"strings"
 	"time"
@@ -24,14 +23,16 @@ func VerifyToken(c *gin.Context) (bool, Res) {
 	authHeader := c.GetHeader("Authorization")
 	bearerToken := strings.Split(authHeader, " ")
 	if len(bearerToken) != 2 || strings.ToLower(bearerToken[0]) != "bearer" {
-		fmt.Println("エラー0")
-		fmt.Println(bearerToken)
 		return false, Res{} // ヘッダーが不正またはトークンが存在しない場合は、空文字列を返します
 	}
 
 	tokenString := bearerToken[1]
 
 	secret := os.Getenv("SUPABASE_JWT_SECRET")
+
+	jwt.TimeFunc = func() time.Time {
+		return time.Now().UTC().Add(time.Second * 20)
+	}
 
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
@@ -42,21 +43,18 @@ func VerifyToken(c *gin.Context) (bool, Res) {
 
 	// トークンのパースに失敗した場合、またはトークンが無効な場合は、falseと空のResを返します
 	if err != nil || !token.Valid {
-		fmt.Println("エラー1")
 		return false, Res{}
 	}
 
 	// Claimsの型が期待どおりでない場合は、falseと空のResを返します
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok {
-		fmt.Println("エラー2")
 		return false, Res{}
 	}
 
 	// トークンが有効期限切れの場合は、falseと空のResを返します
 	expiredAt := int64(claims["exp"].(float64))
 	if expiredAt <= time.Now().Unix() {
-		fmt.Println("エラー3")
 		return false, Res{}
 	}
 
